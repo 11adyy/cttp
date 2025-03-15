@@ -6,6 +6,7 @@
     #include <ws2tcpip.h>
     #pragma comment(lib, "ws2_32.lib")
 #else
+    #include <sys/types.h>
     #include <sys/socket.h>
     #include <arpa/inet.h>
     #include <unistd.h>
@@ -19,7 +20,7 @@
 
 int create_socket(const char *host, int port);
 int create_ssl_socket(const char* host, int port);
-int send_ssl_request(int sock, const char* request);
+int send_ssl_request(int sock, const char* request, size_t len);
 int receive_ssl_response(int sock, char* buffer, size_t size);
 
 void cleanup_sockets();

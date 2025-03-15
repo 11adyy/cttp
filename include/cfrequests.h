@@ -8,6 +8,7 @@
 
 #include "socketman.h"
 #include "fmemory.h"
+#include "fmath.h"
 
 
 #define BUFFER_SIZE 8192

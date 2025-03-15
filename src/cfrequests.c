@@ -10,14 +10,6 @@ unsigned char* frequest(
     unsigned char* buffer, 
     size_t buff_size
 ) {
-    if (
-        port == HTTPS_PORT ||
-        port == SFTP_PORT ||
-        port == IMAPS_PORT ||
-        port == POP3S_PORT ||
-        port == SMTPS_PORT
-    ) printf("[WARN] You are trying to use SSL port with non ssl method. Use frequest_ssl instead.");
-
     int sock = create_socket(host, port);
     if (sock < 0) return NULL;
 
@@ -30,8 +22,8 @@ unsigned char* frequest(
 
     send(sock, request, strlen(request), 0);
 
-    int total = 0, bytes;
-    while ((bytes = recv(sock, request, BUFFER_SIZE - 1, 0)) > 0) {
+    int total = 0, bytes = 0;
+    while ((bytes = recv(sock, request, MIN(BUFFER_SIZE - 1, buff_size - 1), 0)) > 0) {
         if (total >= buff_size) break;
         __f_memcpy(buffer + total, request, bytes);
         total += bytes;
@@ -66,9 +58,9 @@ unsigned char* frequest_ssl(
         method, path, host, body ? strlen(body) : 0, body ? body : ""
     );
 
-    send_ssl_request(sock, request);
-    int total = 0, bytes;
-    while ((bytes = receive_ssl_response(sock, request, BUFFER_SIZE - 1)) > 0) {
+    send_ssl_request(sock, request, BUFFER_SIZE);
+    int total = 0, bytes = 0;
+    while ((bytes = receive_ssl_response(sock, request, MIN(BUFFER_SIZE - 1, buff_size - 1))) > 0) {
         if (total >= buff_size) break;
         __f_memcpy(buffer + total, request, bytes);
         total += bytes;

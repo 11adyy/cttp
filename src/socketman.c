@@ -138,8 +138,8 @@ int create_ssl_socket(const char* host, int port) {
     return sock;
 }
 
-int send_ssl_request(int sock, const char* request) {
-    return SSL_write(ssl, request, strlen(request));
+int send_ssl_request(int sock, const char* request, size_t len) {
+    return SSL_write(ssl, request, len);
 }
 
 int receive_ssl_response(int sock, char* buffer, size_t size) {
